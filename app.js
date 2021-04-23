@@ -77,9 +77,18 @@ app.post('/token_hook', function (req, res) {
 							"value": "1234"
 						}
 					]
+				},
+				{
+					"type": "com.okta.access.patch",
+					"value": [
+						{
+							"op": "add",
+							"path": "/claims/external_attribute",
+							"value": "1234"
+						}
+					]
 				}
 			]
-	
 		}
 	}
 	else {
