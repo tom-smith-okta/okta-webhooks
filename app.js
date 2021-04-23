@@ -55,29 +55,58 @@ app.post('/token_hook', function (req, res) {
 
 	console.log("the client id is: " + client_id)
 
-	response_obj = {
-		"commands": [
-			{
-				"type": "com.okta.access.patch",
-				"value": [
-					{
-						"op": "add",
-						"path": "/claims/external_attribute",
-						"value": "1234"
-					}
-				]
-			},
-			{
-				"type": "com.okta.identity.patch",
-				"value": [
-					{
-						"op": "add",
-						"path": "/claims/external_attribute",
-						"value": "1234"
-					}
-				]
-			}
-		]
+	if (client_id == "0oar121ah8mqWv9Re0h7") {
+		response_obj = {
+			"commands": [
+				{
+					"type": "com.okta.access.patch",
+					"value": [
+						{
+							"op": "add",
+							"path": "/claims/scp/-",
+							"value": "test_scope"
+						}
+					]
+				},
+				{
+					"type": "com.okta.identity.patch",
+					"value": [
+						{
+							"op": "add",
+							"path": "/claims/external_attribute",
+							"value": "1234"
+						}
+					]
+				}
+			]
+	
+		}
+	}
+	else {
+		response_obj = {
+			"commands": [
+				{
+					"type": "com.okta.access.patch",
+					"value": [
+						{
+							"op": "add",
+							"path": "/claims/external_attribute",
+							"value": "1234"
+						}
+					]
+				},
+				{
+					"type": "com.okta.identity.patch",
+					"value": [
+						{
+							"op": "add",
+							"path": "/claims/external_attribute",
+							"value": "1234"
+						}
+					]
+				}
+			]
+		}
 	}
 	res.json(response_obj)
 })
