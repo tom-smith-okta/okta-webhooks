@@ -29,7 +29,7 @@ app.listen(port, function () {
 
 // just display an "I'm awake" message on home page
 app.get('/', function (req, res) {
-	res.send("I'm awake and ready to receive web hooks!")
+	res.send("I'm awake and ready to receive web hooks in 2021!")
 })
 
 // Verify an event hook
