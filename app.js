@@ -4,11 +4,7 @@
 
 require('dotenv').config()
 
-const bodyParser = require('body-parser')
-
 const express = require('express')
-
-const fs = require('fs')
 
 const request = require('request')
 
@@ -21,10 +17,9 @@ const app = express()
 
 var port = process.env.PORT
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
+app.use(express.urlencoded({ extended: true }))
 
-app.use(express.static('public'))
+app.use(express.json())
 
 app.listen(port, function () {
 	console.log('App listening on port ' + port + '...');
@@ -34,11 +29,8 @@ app.listen(port, function () {
 
 // just display an "I'm awake" message on home page
 app.get('/', function (req, res) {
-
-	res.send("I'm awake and ready to receive event hooks!")
-
+	res.send("I'm awake and ready to receive web hooks!")
 })
-
 
 // Verify an event hook
 app.get('/event_hooks', function (req, res) {
@@ -46,12 +38,44 @@ app.get('/event_hooks', function (req, res) {
 
 	console.log("the header is: " + req.header(verification_header))
 
-	var response_obj = {}
+	var response_obj = {
+		verification: req.header(verification_header)
+	}
 
-	response_obj["verification"] = req.header(verification_header)
+	// response_obj["verification"] = req.header(verification_header)
 
 	res.json(response_obj)
+})
 
+app.post('/token_hook', function (req, res) {
+	const hook_obj = req.body
+	console.dir(JSON.stringify(hook_obj))
+
+	response_obj = {
+		"commands": [
+			{
+				"type": "com.okta.access.patch",
+				"value": [
+					{
+						"op": "add",
+						"path": "/claims/external_attribute",
+						"value": "1234"
+					}
+				]
+			},
+			{
+				"type": "com.okta.identity.patch",
+				"value": [
+					{
+						"op": "add",
+						"path": "/claims/external_attribute",
+						"value": "1234"
+					}
+				]
+			}
+		]
+	}
+	res.json(response_obj)
 })
 
 // Receive an event hook
@@ -307,7 +331,6 @@ function handle_event(okta_org, event) {
 function route_request(hook_obj) {
 
 	get_okta_org(hook_obj, function(err, okta_org) {
-
 
 		if (hook_obj.eventType == "com.okta.event_hook") {
 			console.log("this is an event hook.")
