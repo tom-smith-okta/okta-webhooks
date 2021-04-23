@@ -51,6 +51,10 @@ app.post('/token_hook', function (req, res) {
 	const hook_obj = req.body
 	console.dir(JSON.stringify(hook_obj))
 
+	client_id = hook_obj.data.context.protocol.request.client_id
+
+	console.log("the client id is: " + client_id)
+
 	response_obj = {
 		"commands": [
 			{
